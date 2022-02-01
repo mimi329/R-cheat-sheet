@@ -44,7 +44,11 @@ grep(pattern = "student", data) #find
 grepl() #same but logical
 gsub("find_me", "replace_with", data) #find and replace
 ```
-* 
+* look at parts of data
+```
+slice(gapminder, 3:nrow(gapminder)) # Look at the 3rd row to the last row
+slice(gapminder, 3:n()) # Special n() command to index last element
+```
 
 ### Vectors
 * indexing
@@ -115,21 +119,40 @@ data.frame(
 ```
 ## *Week 2*
 
+
+
 ## *Week 3*
 
 ## *Week 4*
 
 ### tidyverse
+* the pipe: read it left to right
+```
+my_norm_data %>% abs() %>% mean(na.rm=TRUE) #read it left to right
+```
 * filter data
 * mutate a variable (into a new variable)
 * sort data
 * *and don't forget to use the pipe again after every line*
+* *also if you want to have the changes saved do* gapminder_new <-
 ```
 gapminder %>%
     filter(year == 2007) %>%
     mutate(lifeExpMonths = 12 * lifeExp) %>%
     arrange(desc(lifeExpMonths))
 ```
+* make long data
+```
+gapminder_long <- gapminder %>%
+  pivot_longer(
+    lifeExp:gdpPercap, #take those three columns
+    names_to = "measure", #put the names of the columns to measure variable
+    values_to = "value" #put the values to value function
+  )
+ #have the participantID column in the data but not use it in the function!
+```
+* make wide data
+* 
 ### Cleaning and ordering data
 * observe data and missing values
 ```
@@ -149,6 +172,8 @@ colnames(df)[3] <- "New name"
 * remove several variables
 ```
 new_df <- select(df, !(2:44))
+data1 <- data1 %>% slice(3:n())
+slice(data1, -(1:2)) #select which rows to drop
 ```
 * combine data
 ```
