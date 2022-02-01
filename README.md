@@ -5,7 +5,7 @@
 * 
 
 ## Week 1
-### useful functions
+### Useful functions
 * random
 ```
 is.numeric(), is.logical(), is.character(), typeof(), mode()
@@ -159,7 +159,9 @@ combined_df <- join(df1, df2, by = "Participant", type = "full")
 subset(df, group == 1)
 df[df$group == 1]
 ```
-* 
+
+____________________________________________________________________________________________________________________________________________
+
 ## How to use this format:
 
 * writing a list
