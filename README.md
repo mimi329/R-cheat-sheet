@@ -4,7 +4,7 @@
 * [import and tidy data](https://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdfhttps://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdf)
 * 
 
-## Week 1
+## *Week 1*
 ### Useful functions
 * random
 ```
@@ -113,11 +113,11 @@ data.frame(
     ThirdVariable = variable3
     )
 ```
-## Week 2
+## *Week 2*
 
-## Week 3
+## *Week 3*
 
-## Week 4
+## *Week 4*
 
 ### tidyverse
 * filter data
