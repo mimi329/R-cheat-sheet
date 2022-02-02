@@ -2,7 +2,7 @@
 
 ## General
 * [import and tidy data](https://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdfhttps://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdf)
-* 
+* [correlations](https://www.guru99.com/r-pearson-spearman-correlation.html)
 
 ## *Week 1*
 ### Useful functions
@@ -17,6 +17,11 @@ sample(x, size) #sample from a vector
 rep(vector, each = 2) #repeat each element from a vector a certain number of times
 setwd("C:/Users/me/Documents/PIPS") #set working directory
 write.csv(InsectSprays, "InsectSprays.csv", row.names = FALSE) #save a file
+```
+* importing data
+```
+fread() #library(data.table)
+read.csv2() #reads a file in a table format and creates df
 ```
 * check the structure of an object
 ```
@@ -128,7 +133,10 @@ data.frame(
 ### tidyverse
 * the pipe: read it left to right
 ```
-my_norm_data %>% abs() %>% mean(na.rm=TRUE) #read it left to right
+#read it left to right
+my_norm_data %>% abs() %>% mean(na.rm=TRUE) 
+#base r pipe:
+my_norm_data |> abs() |> mean(na.rm=TRUE)
 ```
 * filter data
 * mutate a variable (into a new variable)
@@ -152,6 +160,17 @@ gapminder_long <- gapminder %>%
  #have the participantID column in the data but not use it in the function!
 ```
 * make wide data
+```
+#starting with changed data
+gapminder_tidy <- gapminder_long %>%
+  pivot_wider(names_from=measure, values_from=value)
+#starting with
+ gapminder_wide <- gapminder %>%
+  pivot_wider(
+    names_from = year,
+    values_from = c(lifeExp, pop, gdpPercap)
+  )
+```
 * 
 ### Cleaning and ordering data
 * observe data and missing values
@@ -178,6 +197,8 @@ slice(data1, -(1:2)) #select which rows to drop
 * combine data
 ```
 combined_df <- join(df1, df2, by = "Participant", type = "full")
+combined_df <- bind_rows(list(df1, df2))
+combined_df <- list(df1, df2) %>% bind_rows()
 ```
 * choose a subset of a data frame
 ```
