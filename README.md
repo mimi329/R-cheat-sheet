@@ -244,7 +244,7 @@ x <- 1:7
 ifelse(x %% 2 == 0, 'even', 'odd')
 ```
 
-###Explicit loops
+### Explicit loops
 * while loops
 ```ruby
 #play the dice game until we broke
