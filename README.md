@@ -105,6 +105,13 @@ add <- function(x, na.rm = TRUE) {
     warning("NA values detected") #gives a Warning message
   }
 ```
+* operators
+    * relational: ==, !=, < > <= >=!
+    * logical: &, |, !
+    * && looks at only first element of the vector
+```
+ 
+```
 
 </p>
 </details>      
@@ -248,6 +255,7 @@ ifelse(x %% 2 == 0, 'even', 'odd')
 ```
 
 ### Explicit loops
+* general: next: loop continues but skips current iteration; break: loop stops
 * while loops
 ```ruby
 #play the dice game until we broke
@@ -267,6 +275,16 @@ while(!all(dice == c(6,6,6)) & !all(sort(dice) == c(1,2,3))) {
   dice <- sample(1:6, 3, replace = TRUE)
   print(dice)
 }
+  
+#can also use break statement:
+ctr <- 1
+While(ctr <= 7) {
+   if(ctr %% 5 == 0) {    # while loop will be abandoned 
+         break
+     }
+      print(paste("ctr is set to", ctr))
+      ctr <- ctr + 1                                    
+} 
 ```
 * for loops
 ```ruby
@@ -294,6 +312,13 @@ for(i in 1:length(my_vector)){
   my_sum <- my_sum + my_vector[i]
 }
 my_sum
+  
+#use to create a statement, nested loop
+for(i in 1:nrow(data)){
+  for(j in 1:ncol(data)){
+    print(paste("On row", i, "and column", j, "we have", data[i,j]))
+  }
+ }
 ```
 
 ### Implicit loops
@@ -328,7 +353,12 @@ sapply(df, FUN = sum)
 ```ruby
 function(arg1, arg2){if arg1 is this, do that etc.}
 ```
-      
+### Advanced flow control
+  * switch: tests an expression against elements of a list
+  ```
+  yoo no comprendo
+  ```
+  * 
 </p>
 </details>
 
