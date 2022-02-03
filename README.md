@@ -130,6 +130,7 @@ function(arg1, arg2){if arg1 is this, do that etc.}
 
 <details><summary>WEEK 1</summary>
 <p>
+      
 ## *Week 1*
 ### Vectors
 * indexing
