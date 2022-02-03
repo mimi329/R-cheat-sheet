@@ -95,37 +95,17 @@ slice(gapminder, 3:n()) # Special n() command to index last element
 ```ruby
 (i %% 2) == 0
 ```
-* apply
-```ruby
-apply(X,       # Array, matrix or data frame
-      MARGIN,  # 1: columns (line), 2: rows (plane), c(1, 2): rows and columns, 3: cube
-      FUN, ...)# Function to be applied
+* give error or warning
 ```
-* lapply: applies a function to a list or a vector, returning a list of the same length as the input
-* sapply: applies a function to a list or a vector, returning a vector or matrix if it can, or an array
-```ruby
-sapply(X,   # Vector, list or expression object
-       FUN, # Function to be applied
-       ..., # Additional arguments to be passed to FUN
-       simplify = TRUE,  # If FALSE returns a list. If "array" returns an array if possible 
-       USE.NAMES = TRUE) # If TRUE and if X is a character vector, uses the names of X
+add <- function(x, na.rm = TRUE) {
+  if(!is.numeric(x)) {
+    stop("only numeric values allowed") #gives an Error message
+  }
+  if(sum(is.na(x)) > 0) {
+    warning("NA values detected") #gives a Warning message
+  }
+```
 
-sapply(1:3, function(i) {matrix(i, ncol = 3, nrow = 3)}, simplify = "array")
-within_range <- function(mph, low, high){
-  if(mpg>= low & mpg <= high){
-    return(TRUE)
-  }else {return(FALSE)}
-}
-index <- sapply(X=data$mpg, FUN=within_range, low = 15, high = 20)
-#here we have the first arguement defined by the data we defined and we additionaly defined the other two arguements
-
-#if you use it on a dataframe it will apply the function to each column
-sapply(df, FUN = sum)
-```
-* mapply: can be used to apply multiple vectors at the same time
-```ruby
-function(arg1, arg2){if arg1 is this, do that etc.}
-```
 </p>
 </details>      
 
@@ -226,6 +206,7 @@ data.frame(
 <p>
 
 ## *Week 2*
+### Conditional statements
 * if statements
     * make sure you include all possibilities!
     * take care of the ORDER of the statements
@@ -262,6 +243,8 @@ ifelse(conditon, if true, if false)
 x <- 1:7
 ifelse(x %% 2 == 0, 'even', 'odd')
 ```
+
+###Explicit loops
 * while loops
 ```ruby
 #play the dice game until we broke
@@ -309,6 +292,40 @@ for(i in 1:length(my_vector)){
 }
 my_sum
 ```
+
+### Implicit loops
+* apply
+```ruby
+apply(X,       # Array, matrix or data frame
+      MARGIN,  # 1: columns (line), 2: rows (plane), c(1, 2): rows and columns, 3: cube
+      FUN, ...)# Function to be applied
+```
+* lapply: applies a function to a list or a vector, returning a list of the same length as the input
+* sapply: applies a function to a list or a vector, returning a vector or matrix if it can, or an array
+```ruby
+sapply(X,   # Vector, list or expression object
+       FUN, # Function to be applied
+       ..., # Additional arguments to be passed to FUN
+       simplify = TRUE,  # If FALSE returns a list. If "array" returns an array if possible 
+       USE.NAMES = TRUE) # If TRUE and if X is a character vector, uses the names of X
+
+sapply(1:3, function(i) {matrix(i, ncol = 3, nrow = 3)}, simplify = "array")
+within_range <- function(mph, low, high){
+  if(mpg>= low & mpg <= high){
+    return(TRUE)
+  }else {return(FALSE)}
+}
+index <- sapply(X=data$mpg, FUN=within_range, low = 15, high = 20)
+#here we have the first arguement defined by the data we defined and we additionaly defined the other two arguements
+
+#if you use it on a dataframe it will apply the function to each column
+sapply(df, FUN = sum)
+```
+* mapply: can be used to apply multiple vectors at the same time
+```ruby
+function(arg1, arg2){if arg1 is this, do that etc.}
+```
+      
 </p>
 </details>
 
