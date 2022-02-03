@@ -5,11 +5,9 @@
 * [correlations](https://www.guru99.com/r-pearson-spearman-correlation.html)
 * [operators](https://www.tutorialspoint.com/r/r_operators.htm)
 
-<details><summary>WEEK 1</summary>
+<details><summary>Useful functions</summary>
 <p>
 
-## *Week 1*
-### Useful functions
 * random
 ```ruby
 min, max, range, summary
@@ -126,8 +124,13 @@ sapply(df, FUN = sum)
 * mapply: can be used to apply multiple vectors at the same time
 ```ruby
 function(arg1, arg2){if arg1 is this, do that etc.}
-
 ```
+</p>
+</details>      
+
+<details><summary>WEEK 1</summary>
+<p>
+## *Week 1*
 ### Vectors
 * indexing
 ```ruby
