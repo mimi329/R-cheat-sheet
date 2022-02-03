@@ -5,6 +5,9 @@
 * [correlations](https://www.guru99.com/r-pearson-spearman-correlation.html)
 * [operators](https://www.tutorialspoint.com/r/r_operators.htm)
 
+<details><summary>WEEK 1</summary>
+<p>
+
 ## *Week 1*
 ### Useful functions
 * random
@@ -206,6 +209,13 @@ data.frame(
     ThirdVariable = variable3
     )
 ```
+
+</p>
+</details>
+
+<details><summary>WEEK 2</summary>
+<p>
+
 ## *Week 2*
 * if statements
     * make sure you include all possibilities!
@@ -290,7 +300,11 @@ for(i in 1:length(my_vector)){
 }
 my_sum
 ```
-## *Week 3*
+</p>
+</details>
+
+<details><summary>WEEK 4</summary>
+<p>
 
 ## *Week 4*
 
@@ -398,7 +412,11 @@ combined_df <- list(df1, df2) %>% bind_rows()
 subset(df, group == 1)
 df[df$group == 1]
 ```
-
+</p>
+</details>
+      
+<details><summary>how to</summary>
+<p>
 ____________________________________________________________________________________________________________________________________________
 
 ## How to use this format:
@@ -440,3 +458,6 @@ ________________________________________________________________________________
 ==highlight==
 
 <mark>highlight</mark>
+      
+</p>
+</details>
