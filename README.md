@@ -11,6 +11,7 @@
 * random
 ```ruby
 min, max, range, summary
+colSums, rowMeans etc.
 is.numeric(), is.logical(), is.character(), typeof(), mode()
 strsplit()
 rnorm(), runif(), rbinom() #random distributions
