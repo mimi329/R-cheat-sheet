@@ -306,8 +306,8 @@ my_norm_data |> abs() |> mean(na.rm=TRUE)
 * filter data
 * mutate a variable (into a new variable)
 * sort data
-* *and don't forget to use the pipe again after every line*
-* *also if you want to have the changes saved do* gapminder_new <-
+      * *and don't forget to use the pipe again after every line*
+      * *also if you want to have the changes saved do* gapminder_new <-
 ```ruby
 gapminder %>%
     filter(year == 2007) %>%
