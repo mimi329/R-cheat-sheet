@@ -137,7 +137,10 @@ cbind(a, b) #c stands for column
 cbind(b, a) # change the order of binding
 rbind(m, c(1,2,3)) #r stands for row
 
-#create random matrix
+#if you don't want it to be filled by rows
+m <- matrix(1:6, 6, 4, byrow = TRUE)
+
+#create a super random matrix
 set.seed(1234)
 NRows <- sample(2:200,1) #Find a random number of rows
 NCols <- sample(2:200,1) #Find a random number of columns
