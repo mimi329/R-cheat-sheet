@@ -186,9 +186,13 @@ v1 <-c(5,10,2,13)
 l1 <-list(v1=v1, m1=n)
 l1$v1
 
-#change the element in a matrix
+#make a list of matrices
+myList <- rep(list(matrix(sample(1:10, replace=TRUE), 6, 5)), 5)
+#make every matrix unique
+for(i in 1:5) {myList[[i]] <- (matrix(sample(1:10, replace=TRUE), 6, 5))}
+      
+#change a single element in a matrix in a list
 l1$m1[2,2]<-0
-l1$m1
 
 #lists are a popular way of returning data
 t.test(1:9)
