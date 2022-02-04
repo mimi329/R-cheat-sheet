@@ -144,7 +144,7 @@ cbind(a, b) #c stands for column
 cbind(b, a) # change the order of binding
 rbind(m, c(1,2,3)) #r stands for row
 
-#if you don't want it to be filled by rows
+#if you don't want it to be filled by columns
 m <- matrix(1:6, 6, 4, byrow = TRUE)
 
 #create a super random matrix
@@ -160,6 +160,7 @@ a[, 2] # take 2nd column
 a[2, ] # take 2nd row
 a[2,2] # take element at 2nd row, 2nd column
 a[,-2] # remove the 2nd column
+a[ c(TRUE,FALSE), ] #select all even rows 
 ```
 
 ### Arrays
