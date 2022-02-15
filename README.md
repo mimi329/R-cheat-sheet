@@ -521,28 +521,28 @@ ________________________________________________________________________________
       
 </p>
 </details>
-  
-  
+
 <details><summary>Stats 1</summary>
 <p>
-     ##Linear regression
-  ```
+  
+Linear regression
+```ruby
 #linear model
   lm(x ~ y)
 #matrix multiplication
   XTXX <- XT %*% XX
   XTY <- XT %*% y
-  tXXi <- solve(XTXX) # solve obtains the inverse, similar to 1/x
-  hat.beta <- tXXi %*% XTY # obtain the estimate
+  tXXi <- solve(XTXX) #solve obtains the inverse, similar to 1/x
+  hat.beta <- tXXi %*% XTY #obtain the estimate
 #interaction
   score ∼ concentration + time_studied + concentration:time_studied
   #is the same as
   score ∼ concentration*time_studied
 #centering
   mtcars[, "hp"] = mtcars[, "hp"] - mean(mtcars[, "hp"])
- ```
-    ##t-test
- ```
+```
+t-test
+```ruby
 #homogeneity of variances
   leveneTest(d$score1, group = as.factor(d$sex))
   t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less') #or alternative='greater'
@@ -560,22 +560,22 @@ ________________________________________________________________________________
   lower.bound <- mean(math.scores) - moe
   upper.bound <- mean(math.scores) + moe
   ```
-  ##Comparing models
-  ```
+Comparing models
+```ruby
 #Multiple R-squared and AIC
 #the lowest AIC = best fit
   summary(fit1)
   AIC(fit1)
   ```
-  ##Visualising residuals
-  ```
+Visualising residuals
+```ruby
   library(car)
   residualPlot(fit4)
   res4 <- residuals(fit4)
   hist(res4,border='white',bty='n',col='blue',main='')
   ```
-  ##Cross-validation
-  ```
+Cross-validation
+```ruby
 set.seed(2020)
 sk <- 5
 n <- 30
@@ -598,6 +598,7 @@ for(i in 1:5){
 
 mse4.m <- mean(mse4)
 mse5.m <- mean(mse5)
-  ```
+```
+          
 </p>
 </details>
