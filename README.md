@@ -521,3 +521,83 @@ ________________________________________________________________________________
       
 </p>
 </details>
+  
+  
+<details><summary>Stats 1</summary>
+<p>
+     ##Linear regression
+  ```
+#linear model
+  lm(x ~ y)
+#matrix multiplication
+  XTXX <- XT %*% XX
+  XTY <- XT %*% y
+  tXXi <- solve(XTXX) # solve obtains the inverse, similar to 1/x
+  hat.beta <- tXXi %*% XTY # obtain the estimate
+#interaction
+  score ∼ concentration + time_studied + concentration:time_studied
+  #is the same as
+  score ∼ concentration*time_studied
+#centering
+  mtcars[, "hp"] = mtcars[, "hp"] - mean(mtcars[, "hp"])
+ ```
+    ##t-test
+ ```
+#homogeneity of variances
+  leveneTest(d$score1, group = as.factor(d$sex))
+  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less') #or alternative='greater'
+#or like this
+  t.test(score1 ~ sex, data=d, alternative="less")
+#check if the mean score 1 and mean score 2 is the same
+  t.test(d$score1, d$score2, alternative="two.sided")
+#compute t value
+  df <- length(math.scores)-1
+  t.math <- qt(.975, df = df)
+#compute standard error
+  se.math <- sd(math.scores)/sqrt((length(math.scores)-1))
+#compute margin of error
+  moe <- se.math*t.math
+  lower.bound <- mean(math.scores) - moe
+  upper.bound <- mean(math.scores) + moe
+  ```
+  ##Comparing models
+  ```
+#Multiple R-squared and AIC
+#the lowest AIC = best fit
+  summary(fit1)
+  AIC(fit1)
+  ```
+  ##Visualising residuals
+  ```
+  library(car)
+  residualPlot(fit4)
+  res4 <- residuals(fit4)
+  hist(res4,border='white',bty='n',col='blue',main='')
+  ```
+  ##Cross-validation
+  ```
+set.seed(2020)
+sk <- 5
+n <- 30
+fold6 <- rep(1:5,6)
+fold6 <- sample(fold6,n,replace=FALSE)
+mse4 <- c()
+mse5 <- c()
+for(i in 1:5){
+  test <- which(fold6==i)
+  train <- which(fold6!=i)
+  fit4 <- lm(nrvisits[train] ~ physical[train] + stress[train], data=data.med)
+  fit5 <- lm(nrvisits[train] ~ mental[train] + physical[train] + stress[train], data=data.med)
+  mse4[i] <-
+    sum((nrvisits[test] -
+           cbind(rep(1,length(test)), physical[test], stress[test]) %*% coefficients(fit4))^2) / (length(test)-3)
+  mse5[i] <-
+    sum((nrvisits[test] -
+           cbind(rep(1,length(test)),mental[test],physical[test],stress[test])%*%coefficients(fit5))^2)/(length(test)-4)
+}
+
+mse4.m <- mean(mse4)
+mse5.m <- mean(mse5)
+  ```
+</p>
+</details>
