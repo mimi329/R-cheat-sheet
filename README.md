@@ -1,4 +1,132 @@
 # R-cheat-sheet
+Linear regression
+```ruby
+#linear model
+  lm(x ~ y)
+#matrix multiplication
+  XTXX <- XT %*% XX
+  XTY <- XT %*% y
+  tXXi <- solve(XTXX) #solve obtains the inverse, similar to 1/x
+  hat.beta <- tXXi %*% XTY #obtain the estimate
+#interaction
+  score ∼ concentration + time_studied + concentration:time_studied
+  #is the same as
+  score ∼ concentration*time_studied
+#centering
+  mtcars[, "hp"] = mtcars[, "hp"] - mean(mtcars[, "hp"])
+```
+t-test
+```ruby
+#homogeneity of variances
+  leveneTest(d$score1, group = as.factor(d$sex))
+  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less') #or alternative='greater'
+#or like this
+  t.test(score1 ~ sex, data=d, alternative="less")
+#check if the mean score 1 and mean score 2 is the same
+  t.test(d$score1, d$score2, alternative="two.sided")
+#compute t value
+  df <- length(math.scores)-1
+  t.math <- qt(.975, df = df)
+#compute standard error
+  se.math <- sd(math.scores)/sqrt((length(math.scores)-1))
+#compute margin of error
+  moe <- se.math*t.math
+  lower.bound <- mean(math.scores) - moe
+  upper.bound <- mean(math.scores) + moe
+  ```
+Comparing models
+```ruby
+#Multiple R-squared and AIC
+#the lowest AIC = best fit
+  summary(fit1)
+  AIC(fit1)
+  ```
+Visualising residuals
+```ruby
+  library(car)
+  residualPlot(fit4)
+  res4 <- residuals(fit4)
+  hist(res4,border='white',bty='n',col='blue',main='')
+  ```
+Cross-validation
+```ruby
+set.seed(2020)
+sk <- 5
+n <- 30
+fold6 <- rep(1:5,6)
+fold6 <- sample(fold6,n,replace=FALSE)
+mse4 <- c()
+mse5 <- c()
+for(i in 1:5){
+  test <- which(fold6==i)
+  train <- which(fold6!=i)
+  fit4 <- lm(nrvisits[train] ~ physical[train] + stress[train], data=data.med)
+  fit5 <- lm(nrvisits[train] ~ mental[train] + physical[train] + stress[train], data=data.med)
+  mse4[i] <-
+    sum((nrvisits[test] -
+           cbind(rep(1,length(test)), physical[test], stress[test]) %*% coefficients(fit4))^2) / (length(test)-3)
+  mse5[i] <-
+    sum((nrvisits[test] -
+           cbind(rep(1,length(test)),mental[test],physical[test],stress[test])%*%coefficients(fit5))^2)/(length(test)-4)
+}
+
+mse4.m <- mean(mse4)
+mse5.m <- mean(mse5)
+```
+MANOVA
+```ruby
+#assumptions: 
+  #independence, linearity, adequate sample size + ...
+#h0 = multivariate normality, p<0.05
+library(rstatix)
+mshapiro_test(data)
+#h0 = homogeneity of (co)variance matrix, p<0.001
+boxM(Y = df[,1:2], group = df[,3])
+```
+```ruby
+#fit the model
+  maovfit <- manova(cbind(sleep, light) ~ group, data=health)
+  summary(maovfit)
+  #which is the same as:
+  fitlm <- lm(cbind(sleep,light) ~ group, data = health)
+  anova(fitlm)
+#if significant, do univariate analysis, either like this:
+  summary(fitlm)
+  #or:
+  fit1 <- aov(sleep ~ group, data = health)
+  summary(fit1)
+  fit2 <- aov(light ~ group, data = health)
+  summary(fit2)
+#pairwise comparisons:
+  fit_iris <- aov(Sepal.Width ~ Species, data = iris)
+  summary(fit_iris)
+  library(rstatix)
+  tuk <- tukey_hsd(fit_iris)
+  View(tuk)
+```
+Discriminant analysis
+```ruby
+#first check variances, h0 = equal variances, p<0.001
+  box_m(data = health[,1:2], group = health[,3])
+#LDA:
+  library(MASS)
+  model1 <- lda(group ~., data = health)
+  model1
+#Confusion matrix:
+  table(predict(model1, type = "class")$class, health$group)
+```
+```ruby
+#if you want to cross validate it
+set.seed(343)
+n <- nrow(ocd2)
+train <- sample(1:n,n/2)
+test <- -train
+
+library(MASS)
+fitlda <- lda(Group ~ Actions + Thoughts, data=ocd2[train,])
+predlda <- predict(fitlda,newdata=ocd2[test,])
+table(predlda$class,ocd2$Group[test])
+```
 
 ## General
 * [import and tidy data](https://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdfhttps://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdf)
@@ -599,6 +727,11 @@ for(i in 1:5){
 mse4.m <- mean(mse4)
 mse5.m <- mean(mse5)
 ```
+
+          
+
+          
           
 </p>
 </details>
+
