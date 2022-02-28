@@ -127,6 +127,60 @@ fitlda <- lda(Group ~ Actions + Thoughts, data=ocd2[train,])
 predlda <- predict(fitlda,newdata=ocd2[test,])
 table(predlda$class,ocd2$Group[test])
 ```
+Mixed models: before fitting the models
+```ruby
+#plot and observe the differences in slopes
+  xyplot(frequency ~ time | BST, group=subject, data=sex.l, type='b',pch=16)
+  
+#transform to wide, but what is the [,-1] at the end
+  data_wide <- as.matrix(reshape(data, direction = "wide", idvar = "Rat", timevar = "Time")[,-1])
+
+#make data frame with the time variable names
+  idata <- data.frame(Time = as.factor(colnames(data_wide)))
+
+#prep: base model
+lmaov <- lm(data_wide ~ 1)
+#repeated measures ANOVA
+  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time, multivariate = FALSE)
+  summary(rmaov)
+#assumptions:
+    #sphericity {kind of like homogeneity}
+    #Mauchly's test: H0: there is sphericity (variances of the differences are equal), alpha = 0.05
+  #assuming sphericity look at the F statistic
+  #assuming no sphericity: look at p[GG] and p[HF]
+#repeated measures MANOVA if sphericity is violated
+  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time)
+  summary(rmaov)
+  #independent of sphericity, look at Pillai's trace and the linked F
+```
+Mixed models: fitting the models
+```ruby
+library(lme4)
+  #define factors
+  data$Diet <- as.factor(data$Diet)
+  data$Time <- as.factor(data$Time)
+
+#mixed intercept model (1|Rat = compute intercept for each rat)
+  mixed1 <- lmer(weight ~ Time + Diet + (1|Rat), data = BodyWeight,  REML = FALSE)
+  summary(mixed1)
+  coef(mixed1)
+  #you get personalized coefficients for each participant
+  #alternatively using lme (no important differences between the two
+  fit1 <- lme(weight ~ time*diet, random = ~ 1|subject, data=BodyWeight, method="ML")
+  
+  #the number of parameters should be: random and fixed effects intercepts, residual variance (random), and p-1 for each (random/fixed) variable
+
+#mixed intercept + slope (Time|Rat = add a randome slope for Time for each Rat)
+  mixed2 <- lmer(weight ∼ Time + Diet + (Time | Rat), data = BodyWeight, REML = FALSE)
+  fit2 <- lme(weight ~time*diet, random = ~ time | subject, data =BodyWeight, method = "ML")
+```
+```ruby
+#model fit coefficients
+  AIC(mixed1, mixed2)
+  BIC(mixed1, mixed2)
+#find out if the differences between models are significant
+  anova(mixed1, mixed2)
+```
 
 ## General
 * [import and tidy data](https://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdfhttps://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdf)
