@@ -78,10 +78,37 @@ MANOVA
 #assumptions: 
   #independence, linearity, adequate sample size + ...
 #h0 = multivariate normality, p<0.05
-library(rstatix)
-mshapiro_test(data)
+  library(rstatix)
+  mshapiro_test(data)
 #h0 = homogeneity of (co)variance matrix, p<0.001
-boxM(Y = df[,1:2], group = df[,3])
+  boxM(Y = df[,1:2], group = df[,3])
+```
+T squared
+```ruby
+fit.hotel <- hotelling.test(sleep + light ~ group, data = health)
+fit.hotel
+str(fit.hotel)
+Y1 <- as.matrix(health[health$group==1,c("sleep", "light")],ncol=2)
+Y2 <- as.matrix(health[health$group==2,c("sleep", "light")],ncol=2)
+
+# then make the covariance matrices
+S1 <- var(Y1)
+S2 <- var(Y2)
+
+# make the pooled covariance matrix
+#n1 = 34, n2 = 34
+Sp <- (33*S1 + 33*S2)/(34+34-2)
+
+#inverse of the matrix
+solve(Sp)
+
+# Next we compute the mean vectors for the two groups
+m2 <- apply(Y2,2,mean)
+m1 <- apply(Y1,2,mean)
+
+# and finally obtain Hotelling's T^2 and F
+T2 <- (34*34)/(34+34)*t(m1-m2)%*%solve(Sp)%*%(m1-m2)
+F <- ((n1+n2-p-1)/(n1+n2-2)*p)*T2
 ```
 ```ruby
 #fit the model
