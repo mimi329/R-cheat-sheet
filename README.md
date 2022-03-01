@@ -3,11 +3,32 @@ Linear regression
 ```ruby
 #linear model
   lm(x ~ y)
+#the long way: computing step by step
+  #create data:
+  y <- c(4,3,5,6,9)
+  x1 <- c(3,4,6,8,8)
+  x2 <- c(2,6,4,7,7)
+  x0 <- c(1,1,1,1,1)
+  df1 <- data.frame(y, x0, x1, x2)
+  XX <- matrix(1:5, nrow = 5, ncol = 3)
+  XX[,1] <- x0
+  XX[,2] <- x1
+  XX[,3] <- x2
+  XT <- as.matrix(t(XX))
 #matrix multiplication
   XTXX <- XT %*% XX
   XTY <- XT %*% y
   tXXi <- solve(XTXX) #solve obtains the inverse, similar to 1/x
-  hat.beta <- tXXi %*% XTY #obtain the estimate
+  hat.beta <- tXXi %*% XTY #obtain the estimates of the coefficients
+#get standard residual errors
+  #short way:
+  summary(fit)
+  sqrt(sum(residuals(fit)^2)/(5 - 2 - 1))
+  #long way (look at the formula):
+  y <- c(4,3,5,6,9)
+  X <- matrix(c(1,1,1,1,1,3,4,6,8,8,2,6,4,7,7),nrow=5,ncol=3,byrow=FALSE)
+  s2 <- t(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)%*%(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)/(5-3)
+  sqrt(s2)
 #interaction
   score ∼ concentration + time_studied + concentration:time_studied
   #is the same as
@@ -19,10 +40,11 @@ t-test
 ```ruby
 #homogeneity of variances
   leveneTest(d$score1, group = as.factor(d$sex))
-  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less') #or alternative='greater'
+  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less')
+  #alternative would be = "more" if we expect the first group to score higher than the second
 #or like this
   t.test(score1 ~ sex, data=d, alternative="less")
-#check if the mean score 1 and mean score 2 is the same
+#test a two sided hypothesis
   t.test(d$score1, d$score2, alternative="two.sided")
 #compute t value
   df <- length(math.scores)-1
