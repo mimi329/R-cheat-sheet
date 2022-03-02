@@ -46,16 +46,19 @@ t-test
   t.test(score1 ~ sex, data=d, alternative="less")
 #test a two sided hypothesis
   t.test(d$score1, d$score2, alternative="two.sided")
+```
+Finding the t value and confidence interval
+```ruby
 #compute t value
   df <- length(math.scores)-1
   t.math <- qt(.975, df = df)
 #compute standard error
-  se.math <- sd(math.scores)/sqrt((length(math.scores)-1))
-#compute margin of error
+  se.math <- sd(math.scores)/sqrt(length(math.scores))
+#compute margin of error and CI
   moe <- se.math*t.math
   lower.bound <- mean(math.scores) - moe
   upper.bound <- mean(math.scores) + moe
-  ```
+```
 Comparing models
 ```ruby
 #Multiple R-squared and AIC
