@@ -1,238 +1,4 @@
 # R-cheat-sheet
-Linear regression
-```ruby
-#linear model
-  lm(x ~ y)
-#the long way: computing step by step
-  #create data:
-  y <- c(4,3,5,6,9)
-  x1 <- c(3,4,6,8,8)
-  x2 <- c(2,6,4,7,7)
-  x0 <- c(1,1,1,1,1)
-  df1 <- data.frame(y, x0, x1, x2)
-  XX <- matrix(1:5, nrow = 5, ncol = 3)
-  XX[,1] <- x0
-  XX[,2] <- x1
-  XX[,3] <- x2
-  XT <- as.matrix(t(XX))
-#matrix multiplication
-  XTXX <- XT %*% XX
-  XTY <- XT %*% y
-  tXXi <- solve(XTXX) #solve obtains the inverse, similar to 1/x
-  hat.beta <- tXXi %*% XTY #obtain the estimates of the coefficients
-#get standard residual errors
-  #short way:
-  summary(fit)
-  sqrt(sum(residuals(fit)^2)/(5 - 2 - 1))
-  #long way (look at the formula):
-  y <- c(4,3,5,6,9)
-  X <- matrix(c(1,1,1,1,1,3,4,6,8,8,2,6,4,7,7),nrow=5,ncol=3,byrow=FALSE)
-  s2 <- t(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)%*%(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)/(5-3)
-  sqrt(s2)
-#interaction
-  score ∼ concentration + time_studied + concentration:time_studied
-  #is the same as
-  score ∼ concentration*time_studied
-#centering
-  mtcars[, "hp"] = mtcars[, "hp"] - mean(mtcars[, "hp"])
-```
-t-test
-```ruby
-#homogeneity of variances
-  leveneTest(d$score1, group = as.factor(d$sex))
-  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less')
-  #alternative would be = "more" if we expect the first group to score higher than the second
-#or like this
-  t.test(score1 ~ sex, data=d, alternative="less")
-#test a two sided hypothesis
-  t.test(d$score1, d$score2, alternative="two.sided")
-```
-Finding the t value and confidence interval
-```ruby
-#compute t value
-  df <- length(math.scores)-1
-  t.math <- qt(.975, df = df)
-#compute standard error
-  se.math <- sd(math.scores)/sqrt(length(math.scores))
-#compute margin of error and CI
-  moe <- se.math*t.math
-  lower.bound <- mean(math.scores) - moe
-  upper.bound <- mean(math.scores) + moe
-```
-Comparing models
-```ruby
-#Multiple R-squared and AIC
-#the lowest AIC = best fit
-  summary(fit1)
-  AIC(fit1)
-  ```
-Visualising residuals
-```ruby
-  library(car)
-  residualPlot(fit4)
-  res4 <- residuals(fit4)
-  hist(res4,border='white',bty='n',col='blue',main='')
-  ```
-Cross-validation
-```ruby
-set.seed(2020)
-sk <- 5
-n <- 30
-fold6 <- rep(1:5,6)
-fold6 <- sample(fold6,n,replace=FALSE)
-mse4 <- c()
-mse5 <- c()
-for(i in 1:5){
-  test <- which(fold6==i)
-  train <- which(fold6!=i)
-  fit4 <- lm(nrvisits[train] ~ physical[train] + stress[train], data=data.med)
-  fit5 <- lm(nrvisits[train] ~ mental[train] + physical[train] + stress[train], data=data.med)
-  mse4[i] <-
-    sum((nrvisits[test] -
-           cbind(rep(1,length(test)), physical[test], stress[test]) %*% coefficients(fit4))^2) / (length(test)-3)
-  mse5[i] <-
-    sum((nrvisits[test] -
-           cbind(rep(1,length(test)),mental[test],physical[test],stress[test])%*%coefficients(fit5))^2)/(length(test)-4)
-}
-
-mse4.m <- mean(mse4)
-mse5.m <- mean(mse5)
-```
-MANOVA
-```ruby
-#assumptions: 
-  #independence, linearity, adequate sample size + ...
-#h0 = multivariate normality, p<0.05
-  library(rstatix)
-  mshapiro_test(data)
-#h0 = homogeneity of (co)variance matrix, p<0.001
-  boxM(Y = df[,1:2], group = df[,3])
-```
-T squared
-```ruby
-fit.hotel <- hotelling.test(sleep + light ~ group, data = health)
-fit.hotel
-str(fit.hotel)
-Y1 <- as.matrix(health[health$group==1,c("sleep", "light")],ncol=2)
-Y2 <- as.matrix(health[health$group==2,c("sleep", "light")],ncol=2)
-
-# then make the covariance matrices
-S1 <- var(Y1)
-S2 <- var(Y2)
-
-# make the pooled covariance matrix
-#n1 = 34, n2 = 34
-Sp <- (33*S1 + 33*S2)/(34+34-2)
-
-#inverse of the matrix
-solve(Sp)
-
-# Next we compute the mean vectors for the two groups
-m2 <- apply(Y2,2,mean)
-m1 <- apply(Y1,2,mean)
-
-# and finally obtain Hotelling's T^2 and F
-T2 <- (34*34)/(34+34)*t(m1-m2)%*%solve(Sp)%*%(m1-m2)
-F <- ((n1+n2-p-1)/(n1+n2-2)*p)*T2
-```
-```ruby
-#fit the model
-  maovfit <- manova(cbind(sleep, light) ~ group, data=health)
-  summary(maovfit)
-  #which is the same as:
-  fitlm <- lm(cbind(sleep,light) ~ group, data = health)
-  anova(fitlm)
-#if significant, do univariate analysis, either like this:
-  summary(fitlm)
-  #or:
-  fit1 <- aov(sleep ~ group, data = health)
-  summary(fit1)
-  fit2 <- aov(light ~ group, data = health)
-  summary(fit2)
-#pairwise comparisons:
-  fit_iris <- aov(Sepal.Width ~ Species, data = iris)
-  summary(fit_iris)
-  library(rstatix)
-  tuk <- tukey_hsd(fit_iris)
-  View(tuk)
-```
-Discriminant analysis
-```ruby
-#first check variances, h0 = equal variances, p<0.001
-  box_m(data = health[,1:2], group = health[,3])
-#LDA:
-  library(MASS)
-  model1 <- lda(group ~., data = health)
-  model1
-#Confusion matrix:
-  table(predict(model1, type = "class")$class, health$group)
-```
-```ruby
-#if you want to cross validate it
-set.seed(343)
-n <- nrow(ocd2)
-train <- sample(1:n,n/2)
-test <- -train
-
-library(MASS)
-fitlda <- lda(Group ~ Actions + Thoughts, data=ocd2[train,])
-predlda <- predict(fitlda,newdata=ocd2[test,])
-table(predlda$class,ocd2$Group[test])
-```
-Mixed models: before fitting the models
-```ruby
-#plot and observe the differences in slopes
-  xyplot(frequency ~ time | BST, group=subject, data=sex.l, type='b',pch=16)
-  
-#transform to wide, but what is the [,-1] at the end
-  data_wide <- as.matrix(reshape(data, direction = "wide", idvar = "Rat", timevar = "Time")[,-1])
-
-#make data frame with the time variable names
-  idata <- data.frame(Time = as.factor(colnames(data_wide)))
-
-#prep: base model
-lmaov <- lm(data_wide ~ 1)
-#repeated measures ANOVA
-  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time, multivariate = FALSE)
-  summary(rmaov)
-#assumptions:
-    #sphericity {kind of like homogeneity}
-    #Mauchly's test: H0: there is sphericity (variances of the differences are equal), alpha = 0.05
-  #assuming sphericity look at the F statistic
-  #assuming no sphericity: look at p[GG] and p[HF]
-#repeated measures MANOVA if sphericity is violated
-  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time)
-  summary(rmaov)
-  #independent of sphericity, look at Pillai's trace and the linked F
-```
-Mixed models: fitting the models
-```ruby
-library(lme4)
-  #define factors
-  data$Diet <- as.factor(data$Diet)
-  data$Time <- as.factor(data$Time)
-
-#mixed intercept model (1|Rat = compute intercept for each rat)
-  mixed1 <- lmer(weight ~ Time + Diet + (1|Rat), data = BodyWeight,  REML = FALSE)
-  summary(mixed1)
-  coef(mixed1)
-  #you get personalized coefficients for each participant
-  #alternatively using lme (no important differences between the two
-  fit1 <- lme(weight ~ time*diet, random = ~ 1|subject, data=BodyWeight, method="ML")
-  
-  #the number of parameters should be: random and fixed effects intercepts, residual variance (random), and p-1 for each (random/fixed) variable
-
-#mixed intercept + slope (Time|Rat = add a randome slope for Time for each Rat)
-  mixed2 <- lmer(weight ∼ Time + Diet + (Time | Rat), data = BodyWeight, REML = FALSE)
-  fit2 <- lme(weight ~time*diet, random = ~ time | subject, data =BodyWeight, method = "ML")
-```
-```ruby
-#model fit coefficients
-  AIC(mixed1, mixed2)
-  BIC(mixed1, mixed2)
-#find out if the differences between models are significant
-  anova(mixed1, mixed2)
-```
 
 ## General
 * [import and tidy data](https://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdfhttps://github.com/jananiravi/cheatsheets/blob/master/r/tidyverse-data-import-cheatsheet.pdf)
@@ -763,11 +529,32 @@ Linear regression
 ```ruby
 #linear model
   lm(x ~ y)
+#the long way: computing step by step
+  #create data:
+  y <- c(4,3,5,6,9)
+  x1 <- c(3,4,6,8,8)
+  x2 <- c(2,6,4,7,7)
+  x0 <- c(1,1,1,1,1)
+  df1 <- data.frame(y, x0, x1, x2)
+  XX <- matrix(1:5, nrow = 5, ncol = 3)
+  XX[,1] <- x0
+  XX[,2] <- x1
+  XX[,3] <- x2
+  XT <- as.matrix(t(XX))
 #matrix multiplication
   XTXX <- XT %*% XX
   XTY <- XT %*% y
   tXXi <- solve(XTXX) #solve obtains the inverse, similar to 1/x
-  hat.beta <- tXXi %*% XTY #obtain the estimate
+  hat.beta <- tXXi %*% XTY #obtain the estimates of the coefficients
+#get standard residual errors
+  #short way:
+  summary(fit)
+  sqrt(sum(residuals(fit)^2)/(5 - 2 - 1))
+  #long way (look at the formula):
+  y <- c(4,3,5,6,9)
+  X <- matrix(c(1,1,1,1,1,3,4,6,8,8,2,6,4,7,7),nrow=5,ncol=3,byrow=FALSE)
+  s2 <- t(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)%*%(y-X%*%solve(t(X)%*%X)%*%t(X)%*%y)/(5-3)
+  sqrt(s2)
 #interaction
   score ∼ concentration + time_studied + concentration:time_studied
   #is the same as
@@ -779,21 +566,25 @@ t-test
 ```ruby
 #homogeneity of variances
   leveneTest(d$score1, group = as.factor(d$sex))
-  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less') #or alternative='greater'
+  t.test(d$score1[d$sex=='f'],d$score1[d$sex=='m'],alternative='less')
+  #alternative would be = "more" if we expect the first group to score higher than the second
 #or like this
   t.test(score1 ~ sex, data=d, alternative="less")
-#check if the mean score 1 and mean score 2 is the same
+#test a two sided hypothesis
   t.test(d$score1, d$score2, alternative="two.sided")
+```
+Finding the t value and confidence interval
+```ruby
 #compute t value
   df <- length(math.scores)-1
   t.math <- qt(.975, df = df)
 #compute standard error
-  se.math <- sd(math.scores)/sqrt((length(math.scores)-1))
-#compute margin of error
+  se.math <- sd(math.scores)/sqrt(length(math.scores))
+#compute margin of error and CI
   moe <- se.math*t.math
   lower.bound <- mean(math.scores) - moe
   upper.bound <- mean(math.scores) + moe
-  ```
+```
 Comparing models
 ```ruby
 #Multiple R-squared and AIC
@@ -833,8 +624,142 @@ for(i in 1:5){
 mse4.m <- mean(mse4)
 mse5.m <- mean(mse5)
 ```
+MANOVA
+```ruby
+#assumptions: 
+  #independence, linearity, adequate sample size + ...
+#h0 = multivariate normality, p<0.05
+  library(rstatix)
+  mshapiro_test(data)
+#h0 = homogeneity of (co)variance matrix, p<0.001
+  boxM(Y = df[,1:2], group = df[,3])
+```
+T squared
+```ruby
+fit.hotel <- hotelling.test(sleep + light ~ group, data = health)
+fit.hotel
+str(fit.hotel)
+Y1 <- as.matrix(health[health$group==1,c("sleep", "light")],ncol=2)
+Y2 <- as.matrix(health[health$group==2,c("sleep", "light")],ncol=2)
 
-          
+# then make the covariance matrices
+S1 <- var(Y1)
+S2 <- var(Y2)
+
+# make the pooled covariance matrix
+#n1 = 34, n2 = 34
+Sp <- (33*S1 + 33*S2)/(34+34-2)
+
+#inverse of the matrix
+solve(Sp)
+
+# Next we compute the mean vectors for the two groups
+m2 <- apply(Y2,2,mean)
+m1 <- apply(Y1,2,mean)
+
+# and finally obtain Hotelling's T^2 and F
+T2 <- (34*34)/(34+34)*t(m1-m2)%*%solve(Sp)%*%(m1-m2)
+F <- ((n1+n2-p-1)/(n1+n2-2)*p)*T2
+```
+```ruby
+#fit the model
+  maovfit <- manova(cbind(sleep, light) ~ group, data=health)
+  summary(maovfit)
+  #which is the same as:
+  fitlm <- lm(cbind(sleep,light) ~ group, data = health)
+  anova(fitlm)
+#if significant, do univariate analysis, either like this:
+  summary(fitlm)
+  #or:
+  fit1 <- aov(sleep ~ group, data = health)
+  summary(fit1)
+  fit2 <- aov(light ~ group, data = health)
+  summary(fit2)
+#pairwise comparisons:
+  fit_iris <- aov(Sepal.Width ~ Species, data = iris)
+  summary(fit_iris)
+  library(rstatix)
+  tuk <- tukey_hsd(fit_iris)
+  View(tuk)
+```
+Discriminant analysis
+```ruby
+#first check variances, h0 = equal variances, p<0.001
+  box_m(data = health[,1:2], group = health[,3])
+#LDA:
+  library(MASS)
+  model1 <- lda(group ~., data = health)
+  model1
+#Confusion matrix:
+  table(predict(model1, type = "class")$class, health$group)
+```
+```ruby
+#if you want to cross validate it
+set.seed(343)
+n <- nrow(ocd2)
+train <- sample(1:n,n/2)
+test <- -train
+
+library(MASS)
+fitlda <- lda(Group ~ Actions + Thoughts, data=ocd2[train,])
+predlda <- predict(fitlda,newdata=ocd2[test,])
+table(predlda$class,ocd2$Group[test])
+```
+Mixed models: before fitting the models
+```ruby
+#plot and observe the differences in slopes
+  xyplot(frequency ~ time | BST, group=subject, data=sex.l, type='b',pch=16)
+  
+#transform to wide, but what is the [,-1] at the end
+  data_wide <- as.matrix(reshape(data, direction = "wide", idvar = "Rat", timevar = "Time")[,-1])
+
+#make data frame with the time variable names
+  idata <- data.frame(Time = as.factor(colnames(data_wide)))
+
+#prep: base model
+lmaov <- lm(data_wide ~ 1)
+#repeated measures ANOVA
+  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time, multivariate = FALSE)
+  summary(rmaov)
+#assumptions:
+    #sphericity {kind of like homogeneity}
+    #Mauchly's test: H0: there is sphericity (variances of the differences are equal), alpha = 0.05
+  #assuming sphericity look at the F statistic
+  #assuming no sphericity: look at p[GG] and p[HF]
+#repeated measures MANOVA if sphericity is violated
+  rmaov <- car::Anova(mod = lmaov, idata = idata, idesign = ~Time)
+  summary(rmaov)
+  #independent of sphericity, look at Pillai's trace and the linked F
+```
+Mixed models: fitting the models
+```ruby
+library(lme4)
+  #define factors
+  data$Diet <- as.factor(data$Diet)
+  data$Time <- as.factor(data$Time)
+
+#mixed intercept model (1|Rat = compute intercept for each rat)
+  mixed1 <- lmer(weight ~ Time + Diet + (1|Rat), data = BodyWeight,  REML = FALSE)
+  summary(mixed1)
+  coef(mixed1)
+  #you get personalized coefficients for each participant
+  #alternatively using lme (no important differences between the two
+  fit1 <- lme(weight ~ time*diet, random = ~ 1|subject, data=BodyWeight, method="ML")
+  
+  #the number of parameters should be: random and fixed effects intercepts, residual variance (random), and p-1 for each (random/fixed) variable
+
+#mixed intercept + slope (Time|Rat = add a randome slope for Time for each Rat)
+  mixed2 <- lmer(weight ∼ Time + Diet + (Time | Rat), data = BodyWeight, REML = FALSE)
+  fit2 <- lme(weight ~time*diet, random = ~ time | subject, data =BodyWeight, method = "ML")
+```
+```ruby
+#model fit coefficients
+  AIC(mixed1, mixed2)
+  BIC(mixed1, mixed2)
+#find out if the differences between models are significant
+  anova(mixed1, mixed2)
+```
+        
 
           
           
